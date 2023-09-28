@@ -41,6 +41,10 @@ app.use(flash())
 app.use('/', mainRoutes)
 app.use('/todos', todoRoutes)
  
-app.listen(process.env.PORT, ()=>{
-    console.log('Server is running, you better catch it!')
-})    
+// app.listen(process.env.PORT, ()=>{
+//     console.log('Server is running, you better catch it!')
+// })    
+
+const PORT = process.env.PORT || 2121
+
+app.listen(PORT, console.log(`Server running on port ${PORT}`))
