@@ -1,6 +1,9 @@
 const deleteBtn = document.querySelectorAll('.del')
 const todoItem = document.querySelectorAll('span.not')
 const todoComplete = document.querySelectorAll('span.completed')
+const startButton = document.querySelectorAll('.start');
+const stopButton = document.querySelectorAll('.stop');
+const resetButton = document.querySelectorAll('.reset');
 
 Array.from(deleteBtn).forEach((el)=>{
     el.addEventListener('click', deleteTodo)
@@ -67,6 +70,108 @@ async function markIncomplete(){
         console.log(err)
     }
 }
+
+//Timer Functionallity
+
+async function startTimer(todoId) {
+    try {
+        const response = await fetch('/todos/startTimer', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                todoIdFromJSFile: todoId,
+            }),
+        });
+
+        if (response.ok) {
+            // Handle success
+            console.log('Timer started successfully.');
+        } else {
+            // Handle error
+            console.error('Failed to start the timer.');
+        }
+    } catch (err) {
+        console.error('An error occurred:', err);
+    }
+}
+
+async function stopTimer(todoId) {
+    try {
+        const response = await fetch('/todos/stopTimer', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                todoIdFromJSFile: todoId,
+            }),
+        });
+
+        if (response.ok) {
+            console.log('Timer stopped successfully.');
+        } else {
+            console.error('Failed to stop the timer.');
+        }
+    } catch (err) {
+        console.error('An error occurred:', err);
+    }
+}
+
+async function resetTimer(todoId) {
+    try {
+        const response = await fetch('/todos/resetTimer', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                todoIdFromJSFile: todoId,
+            }),
+        });
+
+        if (response.ok) {
+            console.log('Timer reset successfully.');
+        } else {
+            console.error('Failed to reset the timer.');
+        }
+    } catch (err) {
+        console.error('An error occurred:', err);
+    }
+}
+
+function updateTimerDisplay(todoId, elapsedTime) {
+    const timerElement = document.querySelector(`[data-timer-id="${todoId}"]`);
+
+    const seconds = Math.floor(elapsedTime % 60);
+    const minutes = Math.floor((elapsedTime / 60) % 60);
+    const hours = Math.floor(elapsedTime / 3600);
+
+    const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    timerElement.textContent = formattedTime;
+}
+
+document.querySelectorAll('.task').forEach((task) => {
+    const todoId = task.querySelector('.start-timer').getAttribute('data-timer-id');
+    setInterval(() => {
+        fetch(`/todos/getTimer/${todoId}`)
+            .then((response) => response.json())
+            .then((data) => {
+                const { elapsedTime } = data;
+                updateTimerDisplay(todoId, elapsedTime);
+            });
+    }, 1000);
+    task.querySelector('.start-timer').addEventListener('click', () => {
+        startTimer(todoId);
+    });
+    task.querySelector('.stop-timer').addEventListener('click', () => {
+        stopTimer(todoId);
+    });
+    task.querySelector('.reset-timer').addEventListener('click', () => {
+        resetTimer(todoId);
+    });
+});
 
 
 window.addEventListener('load', () => {

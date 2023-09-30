@@ -9,6 +9,12 @@ h1{
 .not{
     text-decoration: underline;
 }
+.faded{
+    opacity:.5;
+}
+.normal{
+    opacity:1;
+}
 
 :root {
     --dark-blue: #001329;

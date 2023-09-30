@@ -10,50 +10,49 @@
 <body>
     <h1>Todos</h1>
     <br>
-    <h2 id = "switch"></h2>
-    <form id ="task-form" action="/todos/createTodo" method='POST'>
-        <input id="task-input" type="text" placeholder="Enter Todo Item" name='todoItem'>
+    <h2 id="switch"></h2>
+    <form id="task-form" action="/todos/createTodo" method="POST">
+        <input id="task-input" type="text" placeholder="Enter Todo Item" name="todoItem">
         <input id="task-submit" type="submit">
     </form>
-    
-    <main> 
-    <h2><%= user.userName %> has <%= left %> things left to do.</h2>
-    <br>
-    <ul>
-    <% todos.forEach( el => { %>
-            <li class='todoItem' data-id='<%=el._id%>'>
-                <span class='<%= el.completed === true ? 'completed' : 'not'%>'><%= el.todo %></span>
-                <span class='del'> Delete </span>
-            </li>
-    <% }) %>    
-    </ul>
-    <br>
-    <div id="tasks">
-        <% todos.forEach(el => { %>
-            <div class="task">
-            <div class="content">
-                <input type="text" class="text" value="<%= el.todo %>" readonly />
-            </div>
-            <div class="counter">
-                <div class="time">
-                    00:00:00
+
+    <main>
+        <h2><%= user.userName %> has <%= left %> things left to do.</h2>
+        <br>
+        <ul>
+            <% todos.forEach(el => { %>
+                <li class='todoItem' data-id='<%= el._id %>'>
+                    <span class='<%= el.completed === true ? 'completed' : 'not' %>'><%= el.todo %></span>
+                    <span class='del'> Delete </span>
+                </li>
+            <% }) %>
+        </ul>
+        <br>
+        <div id="tasks">
+            <% todos.forEach(el => { %>
+                <div class="task <%= el.completed === true ? 'faded' : 'normal' %>">
+                    <div class="content">
+                        <input type="text" class="text" value="<%= el.todo %>" readonly />
+                    </div>
+                    <div class="counter">
+                        <div class="time">
+                            <span class="timer" data-timer-id="<%= el._id %>">00:00:00</span>
+                        </div>
+                        <div class="controls">
+                            <button class="start-timer" data-timer-id="<%= el._id %>">Start</button>
+                            <button class="stop-timer" data-timer-id="<%= el._id %>">Stop</button>
+                            <button class="reset-timer" data-timer-id="<%= el._id %>">Reset</button>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button class="edit">Edit Task</button>
+                        <button class="delete" data-id="<%= el._id %>">Delete Task</button>
+                    </div>
                 </div>
-                <div class="controls">
-                    <button class="start">Start</button>
-                    <button class="stop">Stop</button>
-                    <button class="reset">Reset</button>
-                </div>
-            </div>
-            <div class="actions">
-                <button class="edit">Edit Task</button>
-                <button class="delete" data-id="<%= el._id %>">Delete Task</button>
-            
-            </div>
-            </div>
-        <% }) %>
-    </div>
-    <br>
-    <button id="logoutBtn"><a href="/logout">Logout</a></button>
+            <% }) %>
+        </div>
+        <br>
+        <button id="logoutBtn"><a href="/logout">Logout</a></button>
     </main>
     <script src="js/main.js"></script>
 </body>
