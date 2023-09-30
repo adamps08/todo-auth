@@ -154,14 +154,14 @@ function updateTimerDisplay(todoId, elapsedTime) {
 
 document.querySelectorAll('.task').forEach((task) => {
     const todoId = task.querySelector('.start-timer').getAttribute('data-timer-id');
-    // setInterval(() => {
-    //     fetch(`/todos/getTimer/${todoId}`)
-    //         .then((response) => response.json())
-    //         .then((data) => {
-    //             const { elapsedTime } = data;
-    //             updateTimerDisplay(todoId, elapsedTime);
-    //         });
-    // }, 1000);
+     setInterval(() => {
+         fetch(`/todos/getTimer/${todoId}`)
+             .then((response) => response.json())
+             .then((data) => {
+                 const { elapsedTime } = data;
+                 updateTimerDisplay(todoId, elapsedTime);
+             });
+     }, 1000);
     task.querySelector('.start-timer').addEventListener('click', () => {
         startTimer(todoId);
     });

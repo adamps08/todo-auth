@@ -62,69 +62,154 @@ module.exports = {
         }
     },
     //Timer Fucntionalliy
-    startTimer: async (req, res) => {
-        try {
-            const todo = await Todo.findById(req.body.todoIdFromJSFile);
+    // startTimer: async (req, res) => {
+    //     try {
+    //         const todo = await Todo.findById(req.body.todoIdFromJSFile);
 
-            if (!todo.timer) {
-                todo.timer = {
-                    startTime: new Date(),
-                    endTime: null,
-                    elapsedTime: 0,
-                    resetTime: null,
-                };
-            }
+    //         if (!todo.timer) {
+    //             todo.timer = {
+    //                 startTime: new Date(),
+    //                 endTime: null,
+    //                 elapsedTime: 0,
+    //                 resetTime: null,
+    //             };
+    //         }
 
+    //         todo.timer.startTime = new Date();
+
+    //         await todo.save();
+
+    //         console.log('Timer Started');
+    //         res.json('Timer Started');
+    //     } catch (err) {
+    //         console.log(err);
+    //     }
+    // },
+
+    // stopTimer: async (req, res) => {
+    //     try {
+    //         const todo = await Todo.findById(req.body.todoIdFromJSFile);
+
+    //         if (todo.timer) {
+    //             todo.timer.endTime = new Date();
+
+    //             const resetTimeDifference =
+    //                 todo.timer.resetTime - todo.timer.startTime;
+    //             const currentTime = new Date();
+    //             const elapsedTime =
+    //                 currentTime - todo.timer.startTime -
+    //                 resetTimeDifference;
+    //             todo.timer.elapsedTime = elapsedTime / 1000; // Convert to seconds
+
+    //             todo.timer.startTime = null;
+    //             await todo.save();
+
+    //             console.log('Timer Stopped');
+    //             res.json('Timer Stopped');
+    //         } else {
+    //             console.log('Timer is not running or already stopped.');
+    //             res.json('Timer is not running or already stopped.');
+    //         }
+    //     } catch (err) {
+    //         console.log(err);
+    //     }
+    // },
+
+    // resetTimer: async (req, res) => {
+    //     try {
+    //         const todo = await Todo.findById(req.body.todoIdFromJSFile);
+
+    //         if (todo.timer) {
+    //             todo.timer.startTime = null;
+    //             todo.timer.endTime = null;
+    //             todo.timer.resetTime = new Date();
+    //             todo.timer.elapsedTime = 0;
+
+    //             await todo.save();
+
+    //             console.log('Timer Reset');
+    //             res.json('Timer Reset');
+    //         } else {
+    //             console.log('Timer data not found.');
+    //             res.json('Timer data not found.');
+    //         }
+    //     } catch (err) {
+    //         console.log(err);
+    //     }
+    // },
+
+
+
+
+
+
+
+
+// Start Timer
+startTimer: async (req, res) => {
+    try {
+        const todo = await Todo.findById(req.body.todoIdFromJSFile);
+
+        if (!todo.timer) {
+            // If timer doesn't exist, create it
+            todo.timer = {
+                startTime: new Date(),
+                endTime: null,
+                elapsedTime: 0,
+                resetTime: null,
+            };
+        } else if (!todo.timer.startTime) {
+            // If timer exists but wasn't running, resume it
             todo.timer.startTime = new Date();
+        }
+
+        await todo.save();
+
+        console.log('Timer Started');
+        res.json('Timer Started');
+    } catch (err) {
+        console.log(err);
+    }
+},
+
+// Stop Timer
+stopTimer: async (req, res) => {
+    try {
+        const todo = await Todo.findById(req.body.todoIdFromJSFile);
+
+        if (todo.timer && todo.timer.startTime) {
+            // If the timer is running, calculate elapsed time
+            const elapsed = (new Date() - todo.timer.startTime) / 1000;
+            todo.timer.elapsedTime += elapsed;
+            todo.timer.startTime = null;
+            todo.timer.endTime = new Date();
 
             await todo.save();
 
-            console.log('Timer Started');
-            res.json('Timer Started');
-        } catch (err) {
-            console.log(err);
+            console.log('Timer Stopped');
+            res.json('Timer Stopped');
+        } else {
+            console.log('Timer is not running.');
+            res.json('Timer is not running.');
         }
-    },
-
-    stopTimer: async (req, res) => {
-        try {
-            const todo = await Todo.findById(req.body.todoIdFromJSFile);
-
-            if (todo.timer && !todo.timer.endTime) {
-                todo.timer.endTime = new Date();
-
-                const resetTimeDifference =
-                    todo.timer.resetTime - todo.timer.startTime;
-                const elapsedTime =
-                    todo.timer.endTime - todo.timer.startTime -
-                    resetTimeDifference;
-                todo.timer.elapsedTime = elapsedTime / 1000; // Convert to seconds
-
-                await todo.save();
-
-                console.log('Timer Stopped');
-                res.json('Timer Stopped');
-            } else {
-                console.log('Timer is not running or already stopped.');
-                res.json('Timer is not running or already stopped.');
-            }
-        } catch (err) {
-            console.log(err);
-        }
-    },
-
+    } catch (err) {
+        console.log(err);
+    }
+},
+    
+    // Reset Timer
     resetTimer: async (req, res) => {
         try {
             const todo = await Todo.findById(req.body.todoIdFromJSFile);
-
+    
             if (todo.timer) {
                 todo.timer.startTime = null;
                 todo.timer.endTime = null;
-                todo.timer.resetTime = new Date();
                 todo.timer.elapsedTime = 0;
-
+                todo.timer.resetTime = new Date();
+    
                 await todo.save();
-
+    
                 console.log('Timer Reset');
                 res.json('Timer Reset');
             } else {
@@ -135,6 +220,17 @@ module.exports = {
             console.log(err);
         }
     },
+
+
+
+
+
+
+
+
+
+
+
 
     // getTimer: async (req, res) => {
     //     try {
@@ -147,20 +243,20 @@ module.exports = {
     //     }
     // },
 
-//     getTimer: async (req, res) => {
-//         try {
-//             const todoId = req.params.todoId;
-//             const todo = await Todo.findById(todoId);
+     getTimer: async (req, res) => {
+         try {
+             const todoId = req.params.todoId;
+             const todo = await Todo.findById(todoId);
     
-//             if (todo && todo.timer) {
-//                 res.json({ elapsedTime: todo.timer.elapsedTime });
-//             } else {
-//                 console.log('Timer data not found.');
-//                 res.status(404).json('Timer data not found.');
-//             }
-//         } catch (error) {
-//             console.error(error);
-//             res.status(500).json({ error: 'Internal Server Error' });
-//         }
-//     },
+             if (todo && todo.timer) {
+                 res.json({ elapsedTime: todo.timer.elapsedTime });
+             } else {
+                 console.log('Timer data not found.');
+                 res.status(404).json('Timer data not found.');
+             }
+         } catch (error) {
+             console.error(error);
+             res.status(500).json({ error: 'Internal Server Error' });
+         }
+     },
 }    

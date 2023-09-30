@@ -20,6 +20,6 @@ router.put('/stopTimer', todosController.stopTimer)
 
 router.put('/resetTimer', todosController.resetTimer)
 
-// router.put('/getTimer/:todoId', todosController.getTimer)
+ router.get('/getTimer/:todoId', todosController.getTimer)
 
 module.exports = router
