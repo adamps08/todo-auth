@@ -118,6 +118,8 @@ module.exports = {
             const todo = await Todo.findById(req.body.todoIdFromJSFile);
 
             if (todo.timer) {
+                todo.timer.startTime = null;
+                todo.timer.endTime = null;
                 todo.timer.resetTime = new Date();
                 todo.timer.elapsedTime = 0;
 
@@ -144,20 +146,21 @@ module.exports = {
     //       res.status(500).json({ error: 'Internal Server Error' });
     //     }
     // },
-    getTimer: async (req, res) => {
-        try {
-            const todoId = req.params.todoId;
-            const todo = await Todo.findById(todoId);
+
+//     getTimer: async (req, res) => {
+//         try {
+//             const todoId = req.params.todoId;
+//             const todo = await Todo.findById(todoId);
     
-            if (todo && todo.timer) {
-                res.json({ elapsedTime: todo.timer.elapsedTime });
-            } else {
-                console.log('Timer data not found.');
-                res.status(404).json('Timer data not found.');
-            }
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
-        }
-    },
+//             if (todo && todo.timer) {
+//                 res.json({ elapsedTime: todo.timer.elapsedTime });
+//             } else {
+//                 console.log('Timer data not found.');
+//                 res.status(404).json('Timer data not found.');
+//             }
+//         } catch (error) {
+//             console.error(error);
+//             res.status(500).json({ error: 'Internal Server Error' });
+//         }
+//     },
 }    

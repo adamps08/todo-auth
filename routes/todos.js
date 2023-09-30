@@ -14,12 +14,12 @@ router.put('/markIncomplete', todosController.markIncomplete)
 router.delete('/deleteTodo', todosController.deleteTodo)
 
 //Timer Routes
-router.get('/startTimer', todosController.startTimer)
+router.put('/startTimer', todosController.startTimer)
 
-router.get('/stopTimer', todosController.stopTimer)
+router.put('/stopTimer', todosController.stopTimer)
 
-router.get('/resetTimer', todosController.resetTimer)
+router.put('/resetTimer', todosController.resetTimer)
 
-router.get('/getTimer/:todoId', todosController.getTimer)
+// router.put('/getTimer/:todoId', todosController.getTimer)
 
 module.exports = router
