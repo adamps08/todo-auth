@@ -221,28 +221,6 @@ stopTimer: async (req, res) => {
         }
     },
 
-
-
-
-
-
-
-
-
-
-
-
-    // getTimer: async (req, res) => {
-    //     try {
-    //       const todoId = req.params.todoId;
-    //       const timerData = await fetchTimerDataFromDatabase(todoId);
-    //       res.json({ elapsedTime: timerData.elapsedTime }); 
-    //     } catch (error) {
-    //       console.error(error);
-    //       res.status(500).json({ error: 'Internal Server Error' });
-    //     }
-    // },
-
      getTimer: async (req, res) => {
          try {
              const todoId = req.params.todoId;
