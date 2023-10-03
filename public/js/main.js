@@ -71,61 +71,7 @@ async function markIncomplete(){
     }
 }
 
-//live counter
 
-  let seconds = 0;
-  let interval = null;
-  
-  Array.from(startButton).forEach((el) => {
-    const todoId = el.getAttribute('data-timer-id');
-    el.addEventListener('click', () => startTimer(todoId));
-  });
-  
-  Array.from(stopButton).forEach((el) => {
-    el.addEventListener('click', stop);
-  });
-  
-  Array.from(resetButton).forEach((el) => {
-    el.addEventListener('click', reset);
-  });
-
- //counter functions
-  function timer(todoId) {
-      seconds++;
-
-      const timerElement = document.querySelector(`[data-timer-id="${todoId}"]`);
-
-      let hrs = Math.floor(seconds / 3600);
-      let mins = Math.floor((seconds - (hrs * 3600)) / 60);
-      let secs = seconds % 60;
-
-      if (secs < 10) secs = '0' + secs;
-      if (mins < 10) mins = '0' + mins;
-      if (hrs < 10) hrs = '0' + hrs;
-
-      timerElement.innerText = `${hrs}:${mins}:${secs}`;
-  }
-
-  function start() {
-      if (interval) {
-          return;
-      }
-
-      interval = setInterval(timer, 1000);
-  }
-
-  function stop() {
-      clearInterval(interval);
-      interval = null;
-  }
-
-  function reset() {
-      stop();
-      seconds = 0;
-      timerElement.innerText = "00:00:00"
-  }
-
-//Timer Functionallity
 
 async function startTimer(todoId) {
     try {
@@ -140,8 +86,8 @@ async function startTimer(todoId) {
         });
 
         if (response.ok) {
-            // Handle success
             console.log('Timer started successfully.');
+            
             // startLiveCounter(todoId, initialElapsedTime);
         } else {
             // Handle error
@@ -166,6 +112,9 @@ async function stopTimer(todoId) {
 
         if (response.ok) {
             console.log('Timer stopped successfully.');
+            const timerElement = document.querySelector(`[data-timer-id="${todoId}"]`);
+            clearInterval(timerElement.getAttribute('data-interval-id'));
+        
         } else {
             console.error('Failed to stop the timer.');
         }
@@ -188,7 +137,12 @@ async function resetTimer(todoId) {
 
         if (response.ok) {
             console.log('Timer reset successfully.');
+            const timerElement = document.querySelector(`[data-timer-id="${todoId}"]`);
+            clearInterval(timerElement.getAttribute('data-interval-id'));
+            timerElement.textContent = '00:00:00';
+            timerElement.setAttribute('data-elapsed-time', '0');
             updateTimerDisplay(todoId, 0);
+            
         } else {
             console.error('Failed to reset the timer.');
         }
@@ -208,6 +162,46 @@ function updateTimerDisplay(todoId, elapsedTime) {
     timerElement.textContent = formattedTime;
 }
 
+//live counter
+function formatTime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+}
+
+
+function updateClientTimerDisplay(todoId) {
+    const timerElement = document.querySelector(`[data-timer-id="${todoId}"]`);
+    let elapsedTime = parseInt(timerElement.getAttribute("data-elapsed-time") || "0");
+
+    const intervalId = setInterval(() => {
+        elapsedTime++;
+        timerElement.textContent = formatTime(elapsedTime);
+        timerElement.setAttribute("data-elapsed-time", elapsedTime);
+    }, 1000);
+
+    // Store the interval ID in a data attribute
+    timerElement.setAttribute("data-interval-id", intervalId);
+}
+
+// Function to fetch and update the timer data from the server
+async function fetchAndUpdateTimerData(todoId) {
+    try {
+        const response = await fetch(`/todos/getTimer/${todoId}`);
+        if (response.ok) {
+            const data = await response.json();
+            const { elapsedTime } = data;
+            updateClientTimerDisplay(todoId, elapsedTime);
+        } else {
+            console.error('Failed to fetch timer data from the server.');
+        }
+    } catch (err) {
+        console.error('An error occurred:', err);
+    }
+}
+
+
 //loop
 document.querySelectorAll('.task').forEach((task) => {
     const todoId = task.querySelector('.start-timer').getAttribute('data-timer-id');
@@ -221,6 +215,8 @@ document.querySelectorAll('.task').forEach((task) => {
 
     task.querySelector('.start-timer').addEventListener('click', () => {
         startTimer(todoId);
+        fetchAndUpdateTimerData(todoId);
+        
     });
 
     task.querySelector('.stop-timer').addEventListener('click', () => {
@@ -237,7 +233,10 @@ document.querySelectorAll('.task').forEach((task) => {
         resetTimer(todoId);
  
     });
+
+    
 });
+
 
 
 
