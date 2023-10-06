@@ -88,9 +88,9 @@ async function startTimer(todoId) {
         if (response.ok) {
             console.log('Timer started successfully.');
             
-            // startLiveCounter(todoId, initialElapsedTime);
+            
         } else {
-            // Handle error
+            
             console.error('Failed to start the timer.');
         }
     } catch (err) {
@@ -203,39 +203,73 @@ async function fetchAndUpdateTimerData(todoId) {
 
 
 //loop
-document.querySelectorAll('.task').forEach((task) => {
-    const todoId = task.querySelector('.start-timer').getAttribute('data-timer-id');
 
-    fetch(`/todos/getTimer/${todoId}`)
-     .then((response) => response.json())
-     .then((data) => {
-         const { elapsedTime } = data;
-         updateTimerDisplay(todoId, elapsedTime);
-    });
+async function updateTaskTimers() {
+    const tasks = document.querySelectorAll('.task');
+  //start
+    for (const task of tasks) {
+      const todoId = task.querySelector('.start-timer').getAttribute('data-timer-id');
+  
+      try {
+        const response = await fetch(`/todos/getTimer/${todoId}`);
+        if (response.ok) {
+          const data = await response.json();
+          const { elapsedTime } = data;
+          updateTimerDisplay(todoId, elapsedTime);
+        } else {
+          console.error('Failed to fetch timer data from the server.');
+        }
+      } catch (err) {
+        console.error('An error occurred:', err);
+      }
+  
+      task.querySelector('.start-timer').addEventListener('click', async () => {
+        try {
+          await fetchAndUpdateTimerData(todoId);
+          startTimer(todoId);
+        } catch (err) {
+          console.error('An error occurred:', err);
+        }
+      });
 
-    task.querySelector('.start-timer').addEventListener('click', () => {
-        startTimer(todoId);
-        fetchAndUpdateTimerData(todoId);
-        
-    });
-
-    task.querySelector('.stop-timer').addEventListener('click', () => {
-        stopTimer(todoId);
-        fetch(`/todos/getTimer/${todoId}`)
-        .then((response) => response.json())
-        .then((data) => {
+      task.querySelector('.start-timer').addEventListener('click', async () => {
+        try {
+       
+          startTimer(todoId, initialElapsedTime);
+          await fetchAndUpdateTimerData(todoId); // Start the timer on the server
+        } catch (err) {
+          console.error('An error occurred:', err);
+        }
+      });
+  //stop
+      task.querySelector('.stop-timer').addEventListener('click', async () => {
+        try {
+          await stopTimer(todoId);
+          const response = await fetch(`/todos/getTimer/${todoId}`);
+          if (response.ok) {
+            const data = await response.json();
             const { elapsedTime } = data;
             updateTimerDisplay(todoId, elapsedTime);
-        });
-    });
-
-    task.querySelector('.reset-timer').addEventListener('click', () => {
-        resetTimer(todoId);
- 
-    });
-
-    
-});
+          } else {
+            console.error('Failed to fetch timer data from the server.');
+          }
+        } catch (err) {
+          console.error('An error occurred:', err);
+        }
+      });
+  //reset
+      task.querySelector('.reset-timer').addEventListener('click', async () => {
+        try {
+          await resetTimer(todoId);
+        } catch (err) {
+          console.error('An error occurred:', err);
+        }
+      });
+    }
+  }
+  
+updateTaskTimers();
+  
 
 
 
