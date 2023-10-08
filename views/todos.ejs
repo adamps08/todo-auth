@@ -36,7 +36,7 @@
                     </div>
                     <div class="counter">
                         <div class="time">
-                            <span class="timer" data-timer-id="<%= el._id %>" data-elapsed-time="0"></span>
+                            <span class="timer" data-timer-id="<%= el._id %>" data-elapsed-time="<%= el.timer ? el.timer.elapsedTime : 0 %>"></span>
                         </div>
                         <div class="controls">
                             <button class="start-timer" data-timer-id="<%= el._id %>">Start</button>

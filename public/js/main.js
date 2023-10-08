@@ -209,7 +209,7 @@ async function updateTaskTimers() {
   //start
     for (const task of tasks) {
       const todoId = task.querySelector('.start-timer').getAttribute('data-timer-id');
-  
+      
       try {
         const response = await fetch(`/todos/getTimer/${todoId}`);
         if (response.ok) {
@@ -270,7 +270,6 @@ async function updateTaskTimers() {
   
 updateTaskTimers();
   
-
 
 
 
