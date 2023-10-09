@@ -32,7 +32,9 @@ h1{
     font-family: "Fira sans", sans-serif;
 }
 
-  
+.fa-trash{
+cursor: pointer;
+}  
 
 body {
     display: flex;
@@ -138,7 +140,7 @@ main {
     border: 1px solid var(--red);
 }
 
-button:hover {
+button:hover, .fa-trash:hover {
     opacity: 0.8;
 }
 

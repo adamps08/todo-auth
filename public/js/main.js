@@ -4,6 +4,11 @@ const todoComplete = document.querySelectorAll('span.completed')
 const startButton = document.querySelectorAll('.start');
 const stopButton = document.querySelectorAll('.stop');
 const resetButton = document.querySelectorAll('.reset');
+const completed = document.querySelector('.span.completed')
+    
+    
+    
+    
 
 Array.from(deleteBtn).forEach((el)=>{
     el.addEventListener('click', deleteTodo)
@@ -14,7 +19,8 @@ Array.from(todoItem).forEach((el)=>{
 })
 
 Array.from(todoComplete).forEach((el)=>{
-    el.addEventListener('click', markIncomplete)
+    el.addEventListener('click', markIncomplete);
+
 })
 
 async function deleteTodo(){
@@ -206,10 +212,13 @@ async function fetchAndUpdateTimerData(todoId) {
 
 async function updateTaskTimers() {
     const tasks = document.querySelectorAll('.task');
-  //start
     for (const task of tasks) {
+      const startBtn = task.querySelector('.start-timer');
+      const stopBtn = task.querySelector('.stop-timer')
+      const resetBtn = task.querySelector('.reset-timer')
       const todoId = task.querySelector('.start-timer').getAttribute('data-timer-id');
-      
+
+      //start
       try {
         const response = await fetch(`/todos/getTimer/${todoId}`);
         if (response.ok) {
@@ -222,27 +231,38 @@ async function updateTaskTimers() {
       } catch (err) {
         console.error('An error occurred:', err);
       }
-  
-      task.querySelector('.start-timer').addEventListener('click', async () => {
+      
+      
+      startBtn.addEventListener('click', async () => {
         try {
           await fetchAndUpdateTimerData(todoId);
           startTimer(todoId);
         } catch (err) {
           console.error('An error occurred:', err);
         }
+        if(task.classList.contains('completed')){
+            startBtn.disabled = true
+          }
       });
 
-      task.querySelector('.start-timer').addEventListener('click', async () => {
-        try {
-       
-          startTimer(todoId, initialElapsedTime);
-          await fetchAndUpdateTimerData(todoId); // Start the timer on the server
-        } catch (err) {
-          console.error('An error occurred:', err);
-        }
-      });
+
+    //   async function clickHandler() {
+    //     try {
+    //         await fetchAndUpdateTimerData(todoId);
+    //         startTimer(todoId);
+    //     } catch (err) {
+    //         console.error('An error occurred:', err);
+    //     }
+    // }
+    
+    // startBtn.addEventListener('click', clickHandler);
+    
+    // if (task.classList.contains('completed')) {
+    //     startBtn.removeEventListener('click', clickHandler); 
+    // }
+     
   //stop
-      task.querySelector('.stop-timer').addEventListener('click', async () => {
+      stopBtn.addEventListener('click', async () => {
         try {
           await stopTimer(todoId);
           const response = await fetch(`/todos/getTimer/${todoId}`);
@@ -258,7 +278,7 @@ async function updateTaskTimers() {
         }
       });
   //reset
-      task.querySelector('.reset-timer').addEventListener('click', async () => {
+      resetBtn.addEventListener('click', async () => {
         try {
           await resetTimer(todoId);
         } catch (err) {
@@ -266,12 +286,12 @@ async function updateTaskTimers() {
         }
       });
     }
+  //disabling buttons upon completion
+ 
   }
   
 updateTaskTimers();
   
-
-
 
 
 
