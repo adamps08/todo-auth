@@ -256,3 +256,42 @@ ul {
     background-color: var(--red);
     border: 1px solid var(--red);
 }
+
+
+
+/********** Index.ejs styles and sign up styles *************/
+.login {
+    color: white;
+    text-align: center;
+    border: 2px solid white;
+    width: 5rem;
+    justify-content: center;
+    margin-left: 50%;
+    margin-top: 2rem;
+    padding: 1rem;
+    text-decoration: none;
+}
+
+.signup{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 800px;
+    width: 100%;
+    margin: auto;
+    padding: 0.5rem 0 1rem 0;
+}
+
+.signup input {
+    flex: 1 1 0%;
+    padding: 0.75rem 0.5rem;
+    background-color: var(--dark-blue);
+    color: var(--light);
+    border: 1px solid var(--grey);
+    border-radius: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+.signup input::placeholder {
+    color: var(--grey);
+}
