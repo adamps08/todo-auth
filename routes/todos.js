@@ -1,27 +1,25 @@
-const express = require('express')
-const router = express.Router()
-const todosController = require('../controllers/todos') 
-const { ensureAuth } = require('../middleware/auth')
+const express = require("express");
+const router = express.Router();
+const todosController = require("../controllers/todos");
+const { ensureAuth } = require("../middleware/auth");
 
-router.get('/', ensureAuth, todosController.getTodos)
+router.get("/", ensureAuth, todosController.getTodos);
 
-router.post('/createTodo', todosController.createTodo)
+router.post("/createTodo", todosController.createTodo);
 
-router.put('/markComplete', todosController.markComplete)
+router.put("/markComplete", todosController.markComplete);
 
-router.put('/markIncomplete', todosController.markIncomplete)
+router.put("/markIncomplete", todosController.markIncomplete);
 
-router.delete('/deleteTodo', todosController.deleteTodo)
+router.delete("/deleteTodo", todosController.deleteTodo);
 
 //Timer Routes
-router.put('/startTimer', todosController.startTimer)
+router.put("/startTimer", todosController.startTimer);
 
-router.put('/stopTimer', todosController.stopTimer)
+router.put("/stopTimer", todosController.stopTimer);
 
-router.put('/resetTimer', todosController.resetTimer)
+router.put("/resetTimer", todosController.resetTimer);
 
- router.get('/getTimer/:todoId', todosController.getTimer)
+router.get("/getTimer/:todoId", todosController.getTimer);
 
- 
-
-module.exports = router
+module.exports = router;
