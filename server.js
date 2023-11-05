@@ -1,3 +1,4 @@
+// Imports
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -9,21 +10,25 @@ const logger = require("morgan");
 const connectDB = require("./config/database");
 const mainRoutes = require("./routes/main");
 const todoRoutes = require("./routes/todos");
-const googleAuthRoutes = require("./routes/auth");
+// const googleAuthRoutes = require("./routes/auth");
 
+// Environment variables
 require("dotenv").config({ path: "./config/.env" });
 
-// Passport config
+// Passport configuration
 require("./config/config-passport")(passport);
 
+// Connect to database
 connectDB();
 
+// Express configuration
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(logger("dev"));
-// Sessions
+
+// Session setup
 app.use(
   session({
     secret: "keyboard cat",
@@ -41,8 +46,7 @@ app.use(flash());
 // Listening routes
 app.use("/", mainRoutes);
 app.use("/todos", todoRoutes);
-app.use("/auth", googleAuthRoutes);
 
+// Listening port
 const PORT = process.env.PORT || 2121;
-
 app.listen(PORT, console.log(`Server running on port ${PORT}`));

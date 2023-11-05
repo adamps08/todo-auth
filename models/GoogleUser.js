@@ -1,5 +1,7 @@
+// Import
 const mongoose = require("mongoose");
 
+// Schema for user logging in using Google Auth
 const GoogleUserSchema = new mongoose.Schema({
   googleId: { type: String, required: true },
   displayName: { type: String, required: true },

@@ -75,11 +75,13 @@ module.exports = function (passport) {
 
   passport.deserializeUser((id, done) => {
     // Check both local and Google users
+    // Try local user version first
     User.findById(id, (err, user) => {
       if (user) {
         console.log("Deserializing local user with ID:", id);
         return done(err, user);
       } else {
+        // Check for google user after
         gUser.findById(id, (err, user) => {
           if (user) {
             console.log("Deserializing Google user with ID:", id);
