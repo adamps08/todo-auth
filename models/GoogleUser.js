@@ -1,4 +1,4 @@
-// Import
+// Imports
 const mongoose = require("mongoose");
 
 // Schema for user logging in using Google Auth
