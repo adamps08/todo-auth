@@ -1,18 +1,22 @@
 const express = require("express");
-const passport = require("passport");
+const passportGoogle = require("passport");
 const router = express.Router();
 
 // Description: Authenticate with Google
 // Route: GET /auth/google
-router.get("/google", passport.authenticate("google", { scope: ["profile"] }));
+router.get(
+  "/google",
+  passportGoogle.authenticate("google", { scope: ["profile"] })
+);
 
 // Description: Google auth callback
 // Route: GET /auth/google/callback
 router.get(
   "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/" }),
+  passportGoogle.authenticate("google", { failureRedirect: "/" }),
   (req, res) => {
-    res.redirect("/todos");
+    console.log("Authentication should have been successfull");
+    res.redirect("/signup");
   }
 );
 

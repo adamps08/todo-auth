@@ -14,8 +14,7 @@ const googleAuthRoutes = require("./routes/auth");
 require("dotenv").config({ path: "./config/.env" });
 
 // Passport config
-require("./config/googlePassport")(passport);
-require("./config/passport")(passport);
+require("./config/config-passport")(passport);
 
 connectDB();
 
@@ -43,10 +42,6 @@ app.use(flash());
 app.use("/", mainRoutes);
 app.use("/todos", todoRoutes);
 app.use("/auth", googleAuthRoutes);
-
-// app.listen(process.env.PORT, ()=>{
-//     console.log('Server is running, you better catch it!')
-// })
 
 const PORT = process.env.PORT || 2121;
 

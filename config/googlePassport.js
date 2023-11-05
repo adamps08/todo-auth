@@ -2,8 +2,8 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const mongoose = require("mongoose");
 const gUser = require("../models/GoogleUser");
 
-module.exports = function (passport) {
-  passport.use(
+module.exports = function (passportGoogle) {
+  passportGoogle.use(
     new GoogleStrategy(
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
@@ -38,13 +38,13 @@ module.exports = function (passport) {
       }
     )
   );
-  passport.serializeUser((user, done) => {
-    console.log("Serializing user with ID:", user.id);
+  passportGoogle.serializeUser((user, done) => {
+    console.log("Serializing google user with ID:", user.id);
     done(null, user.id);
   });
 
-  passport.deserializeUser((id, done) => {
-    console.log("Deserializing user with ID:", id);
+  passportGoogle.deserializeUser((id, done) => {
+    console.log("Deserializing google user with ID:", id);
     gUser.findById(id, (err, user) => done(err, user));
   });
 };
